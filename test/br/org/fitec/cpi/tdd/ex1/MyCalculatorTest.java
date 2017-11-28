@@ -128,6 +128,24 @@ public class MyCalculatorTest
     {
         Assert.assertEquals(185, myCalculator.add("100,1001,50,2000,25,10"));
     }
+    
+    @Test
+    public void testSumAnyNumbersWithZeroInitialSuccess() throws NegativeNumberException
+    {
+        Assert.assertEquals(835, myCalculator.add("0,200,10,500,125"));
+    }
+    
+    @Test
+    public void testSumAnyNumbersWithZeroSuccess() throws NegativeNumberException
+    {
+        Assert.assertEquals(213, myCalculator.add("10,1001,0,200,2,1"));
+    }
+    
+    @Test
+    public void testSumAnyNumbersWithZeroAndInitialZeroSuccess() throws NegativeNumberException
+    {
+        Assert.assertEquals(345, myCalculator.add("0,10,1500,0,2300,225,110"));
+    }
     // SUM - Finish
     
     
@@ -219,6 +237,24 @@ public class MyCalculatorTest
     public void testSubtractAnyNumbersWithThousandMissSuccess() throws NegativeNumberException
     {
         Assert.assertEquals(15, myCalculator.subtract("100,1001,50,2000,25,10"));
+    }
+    
+    @Test
+    public void testSubtractAnyNumbersWithZeroInitialSuccess() throws NegativeNumberException
+    {
+        Assert.assertEquals(-170, myCalculator.subtract("0,30,10,5,125"));
+    }
+    
+    @Test
+    public void testSubtractAnyNumbersWithZeroSuccess() throws NegativeNumberException
+    {
+        Assert.assertEquals(265, myCalculator.subtract("800,1800,0,500,2600,25,10"));
+    }
+    
+    @Test
+    public void testSubtractAnyNumbersWithZeroAndInitialZeroSuccess() throws NegativeNumberException
+    {
+        Assert.assertEquals(-23, myCalculator.subtract("0,10,1200,5,2900,0,7,1"));
     }
     // SUBTRACT - Finish
     
@@ -402,7 +438,7 @@ public class MyCalculatorTest
     @Test
     public void testDivideAnyNumbersWithThousandMissSuccess() throws NegativeNumberException, DivisionByZeroNumberException
     {
-        Assert.assertEquals(5, myCalculator.divide("300,1001,6,2000,5,2"), 0.1);
+        Assert.assertEquals(2.5, myCalculator.divide("300,1001,6,2000,5,4"), 0.1);
     }
     
     @Test
@@ -411,6 +447,19 @@ public class MyCalculatorTest
     	try
         {
             myCalculator.divide("20,1000,0,30,5");
+        }
+        catch (DivisionByZeroNumberException e)
+        {
+            Assert.assertEquals("division by zero", e.getMessage());
+        }
+    }
+    
+    @Test
+    public void testDivideNumberByZeroInitialZeroShouldFailException() throws NegativeNumberException, DivisionByZeroNumberException
+    {
+    	try
+        {
+            myCalculator.divide("0,100,0,30,5");
         }
         catch (DivisionByZeroNumberException e)
         {

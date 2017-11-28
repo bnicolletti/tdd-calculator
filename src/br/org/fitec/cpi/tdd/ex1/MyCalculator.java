@@ -10,8 +10,9 @@
 // **********************************************************************
 package br.org.fitec.cpi.tdd.ex1;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.function.DoublePredicate;
 import java.util.function.IntPredicate;
 
@@ -24,6 +25,7 @@ public class MyCalculator implements Calculator
 	private IntPredicate filterIntNumbersLessThanZero = number -> number < 0;
 	private DoublePredicate filterDoubleNumbersAllowedToOperate = number -> number >= 0 && number < 1000;
 	private IntPredicate filterIntNumbersAllowedToOperate = number -> number >= 0 && number < 1000;
+	private DoublePredicate filterDoubleNumbersEqualsZero = number -> number == 0;
 	
 	// Convert String of numbers into Integer Array
 	private int[] convertStringToIntArray(String numbers) {
@@ -79,7 +81,8 @@ public class MyCalculator implements Calculator
         	throw new NegativeNumberException(numbersLessThanZero);
         }
         else {
-        	return Arrays.stream(numbersArray).filter(filterDoubleNumbersAllowedToOperate).reduce((a, b) -> a * b).orElse(0.0);
+        	Double result = Arrays.stream(numbersArray).filter(filterDoubleNumbersAllowedToOperate).reduce((a, b) -> a * b).orElse(0.0);
+        	return BigDecimal.valueOf(result).setScale(1, RoundingMode.UP).doubleValue();
         }
 	}
 
@@ -89,16 +92,17 @@ public class MyCalculator implements Calculator
     	double[] numbersArray = convertStringToDoubleArray(numbers);
     	double[] numbersLessThanZero = Arrays.stream(numbersArray).filter(filterDoubleNumbersLessThanZero).toArray();
     	double[] numbersAllowedToOperate = Arrays.stream(numbersArray).filter(filterDoubleNumbersAllowedToOperate).toArray();
-    	int quantityOfZeroInStream = Collections.frequency(Arrays.asList(numbersAllowedToOperate), 0);
+    	double[] numbersEqualsZero = Arrays.stream(numbersArray).filter(filterDoubleNumbersEqualsZero).toArray();
     	
         if(numbersLessThanZero.length > 0) {
         	throw new NegativeNumberException(numbersLessThanZero);
         }
-        else if(quantityOfZeroInStream > 1 || (quantityOfZeroInStream == 1 && numbersAllowedToOperate[0] != 0)) {
+        else if(numbersEqualsZero.length > 1 || (numbersEqualsZero.length == 1 && numbersAllowedToOperate[0] != 0)) {
         	throw new DivisionByZeroNumberException("Division by Zero");
         }
         else {
-        	return Arrays.stream(numbersAllowedToOperate).reduce((a, b) -> a / b).orElse(0.0);
+        	Double result = Arrays.stream(numbersAllowedToOperate).reduce((a, b) -> a / b).orElse(0.0);
+        	return BigDecimal.valueOf(result).setScale(1, RoundingMode.UP).doubleValue();
         }
 	}
 
